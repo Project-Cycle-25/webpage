@@ -28,7 +28,6 @@ import nikin from "../../assets/Home/nikin.png";
 import sanjushree from "../../assets/Home/sanjushree.png";
 import sharan from "../../assets/Home/sharan.png";
 import shrikar from "../../assets/Home/shrikar.png";
-import sriram from "../../assets/Home/sriram.png";
 import taher from  "../../assets/Home/taher.png";
 
 
@@ -87,13 +86,12 @@ function Board() {
               { imgPath: nikin, title: "Nikin", description: "Web Dev Lead" },
               { imgPath: hari, title: "Harisarvesh", description: "Finance Lead" },
               { imgPath: karan, title: "Karan Parekh", description: "Finance Lead" },
-              { imgPath: harshavardhan, title: "Harshavardhan", description: "Marketing Lead" },
+              { imgPath: harshavardhan, title: "Harshvardhan", description: "Marketing Lead" },
               { imgPath: jacob, title: "Jacob Thomas", description: "Design Lead" },
               { imgPath: jasmeet, title: "Jasmeet", description: "AI/ML Lead" },
               { imgPath: sanjushree, title: "Sanjushree", description: "AI/Ml Lead" },
               { imgPath: shrikar, title: "Shrikar", description: "Mechatronics Lead" },
               { imgPath: miruthula, title: "Miruthula", description: "Editoral Lead" },
-              { imgPath: sriram, title: "Sriram", description: "Editoral Lead" },
               ].map((member, index) => (
               <Col key={index} xs={8} sm={6} md={4} lg={2}>
                 <SeniorCore imgPath={member.imgPath} title={member.title} description={member.description} />

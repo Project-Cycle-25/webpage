@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from "react";
-import Preloader from "./components/Pre";
+
+import Preloader from "./components/Preloader";
 import Navbar from "./components/Navbar";
-import Home from "./components/Home/Home";
-import Footer from "./components/Footer";
+import Home from "./components/Home";
 
 
 import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate
+  Navigate,
 } from "react-router-dom";
-import ScrollToTop from "./components/ScrollToTop";
-import "./style.css";
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 
 function App() {
   const [load, upadateLoad] = useState(true);
@@ -22,33 +19,38 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       upadateLoad(false);
-    }, 1200);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <Router>
-      <Preloader load={load} />
-      <div className="App" id={load ? "no-scroll" : "scroll"}>
-        <Navbar />
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<Home scrollToElement="about" />} />
-          <Route path="/event" element={<Home scrollToElement="events"/>} />
-          <Route path="/blog" element={<Home scrollToElement="blogs" />} />
-          <Route path="/board" element={<Home scrollToElement="board"/>} />
-          <Route path="/gallery" element={<Home scrollToElement="gallery"/>} />
-          <Route path="/contact" element={<Home scrollToElement="contact"/>} />
-          <Route path="*" element={<Navigate to="/"/>} />
-        </Routes>
+      {load ? <Preloader /> : (
+        <div
+          className='min-h-screen bg-gradient-to-br from-[#13121b] via-[#1e1236] to-[#393073]
+'
+          id="scroll"
+      
+        >
+          <Navbar />
+          
 
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" />
+            <Route path="/event"  />
+            <Route path="/blog" />
+            <Route path="/board"  />
+            <Route path="/gallery" />
+            <Route path="/contact"  />
 
-        <Footer />
-        
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
 
-      </div>
+        </div>
+      )}
+
     </Router>
   );
 }

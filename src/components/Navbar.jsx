@@ -1,150 +1,122 @@
+"use client";
+
 import React, { useState } from "react";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import Container from "react-bootstrap/Container";
-import { Link } from "react-router-dom";
-import './NavBar.css';  // Make sure to use the correct path to your CSS file
 
-import {
-  AiOutlineHome,
-  AiOutlineFundProjectionScreen,
-  AiOutlinePicture,
-  AiOutlineTeam,
-} from "react-icons/ai";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 
-import { CgFileDocument } from "react-icons/cg";
+import { Home, Bot, BarChart2, ImageIcon, BookOpen, Users, MessageSquare } from "lucide-react";
 
-import { BsRobot } from "react-icons/bs";
+export default function Navbar() {
+  const navItems = [
+    { link: "#home", name: "Home", icon: <Home className="h-5 w-5" /> },
+    { link: "#about", name: "About", icon: <Bot className="h-5 w-5" /> },
+    { link: "#events", name: "Events", icon: <BarChart2 className="h-5 w-5" /> },
+    { link: "#gallery", name: "Gallery", icon: <ImageIcon className="h-5 w-5" /> },
+    { link: "#blog", name: "Projects & Blogs", icon: <BookOpen className="h-5 w-5" /> },
+    { link: "#board", name: "Board", icon: <Users className="h-5 w-5" /> },
+    { link: "#contact", name: "Contact us", icon: <MessageSquare className="h-5 w-5" /> },
+  ];
 
-import { LuContact } from "react-icons/lu";
+  const { scrollYProgress } = useScroll();
+  const [visible, setVisible] = useState(true);
 
-function NavBar() {
-  const [expand, updateExpanded] = useState(false);
-  const [navColour, updateNavbar] = useState(false);
+  useMotionValueEvent(scrollYProgress, "change", (current) => {
+    if (typeof current === "number") {
+      const direction = current - scrollYProgress.getPrevious();
 
-  function scrollHandler() {
-    if (window.scrollY >= 20) {
-      updateNavbar(true);
-    } else {
-      updateNavbar(false);
+      if (scrollYProgress.get() < 0.05) {
+        setVisible(true);
+      } else {
+        if (direction < 0) {
+          setVisible(true);
+        } else {
+          setVisible(false);
+        }
+      }
+    }
+  });
+
+  const handleClick = (e) => {
+  e.preventDefault();
+  const href = e.currentTarget.getAttribute("href");
+
+  if (href?.startsWith("#")) {
+    const targetId = href.substring(1);
+    const element = document.getElementById(targetId);
+
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
+};
 
-  window.addEventListener("scroll", scrollHandler);
+
 
   return (
-    <Navbar
-      expanded={expand}
-      fixed="top"
-      expand="md"
-      className={navColour ? "sticky-navbar" : "navbar"}
-      style={{ transition: "background 0.3s ease" }}
-    >
-      <Container>
-        <Navbar.Toggle
-          aria-controls="responsive-navbar-nav"
-          onClick={() => {
-            updateExpanded(expand ? false : "expanded");
-          }}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </Navbar.Toggle>
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav
-            className="ms-auto me-auto"
-            defaultActiveKey="#home"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "30px",
-            }}
-          >
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/"
-                onClick={() => updateExpanded(false)}
-                className="nav-link-custom"
-              >
-                <AiOutlineHome style={{ marginBottom: "2px", fontSize: "1.5rem" }} /> Home
-              </Nav.Link>
-            </Nav.Item>
+    <AnimatePresence mode="wait">
+      {/* Top Navbar for Desktop */}
+      <motion.div
+        initial={{opacity: 1, y: 0}}
+        animate={{opacity: visible ? 1 : 0, y: visible ? 0 : -100}}
+        transition={{duration: 0.2}}
+        className="hidden lg:flex fixed top-6 inset-x-0 px-8 py-2 rounded-full max-w-[80%] ml-auto mr-auto 
+                    items-center justify-around space-x-3 
+                    bg-gray-100/15 backdrop-blur-md border border-gray-100/30 shadow-md z-50 scale-85">
+        {navItems.map((item, idx) => (
+          <a
+            key={item.link}
+            href={item.link}
+            onClick={handleClick}
+            aria-label={`Go to ${item.link}`}
+            className="flex items-center p-2 rounded-full text-gray-50">
+            {item.icon}
+            <span className=" ml-1 font-medium font-serif">
+              {item.name}
+            </span>
+          </a>
+        ))}
+      </motion.div>
 
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/about"
-                onClick={() => updateExpanded(false)}
-                className="nav-link-custom"
-              >
-                <BsRobot style={{ marginBottom: "2px", fontSize: "1.5rem" }} /> About
-              </Nav.Link>
-            </Nav.Item>
+      {/* Top Navbar for Tablet */}
+      <motion.div
+        initial={{opacity: 1, y: 0}}
+        animate={{opacity: visible ? 1 : 0, y: visible ? 0 : -100}}
+        transition={{duration: 0.2}}
+        className="hidden md:flex lg:hidden fixed top-6 inset-x-0 px-4 py-1 rounded-full max-w-[90%] ml-auto mr-auto 
+              items-center justify-around gap-2
+              bg-gray-100/15 backdrop-blur-md border border-gray-100/30 shadow-md z-50">
+        {navItems.map((item, idx) => (
+          <a
+            key={item.link}
+            href={item.link}
+            onClick={handleClick}
+            aria-label={`Go to ${item.link}`}
+            className="flex px-1 py-1 rounded-full text-gray-50 font-semibold font-serif">
+            {item.name}
+          </a>
+        ))}
+      </motion.div>
 
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/event"
-                onClick={() => updateExpanded(false)}
-                className="nav-link-custom"
-              >
-                <AiOutlineFundProjectionScreen style={{ marginBottom: "2px", fontSize: "1.5rem" }} /> Events
-              </Nav.Link>
-            </Nav.Item>
-
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/gallery"
-                onClick={() => updateExpanded(false)}
-                className="nav-link-custom"
-              >
-                <AiOutlinePicture style={{ marginBottom: "2px", fontSize: "1.5rem" }} /> Gallery
-              </Nav.Link>
-            </Nav.Item>
-
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/blog"
-                onClick={() => updateExpanded(false)}
-                className="nav-link-custom"
-              >
-                <CgFileDocument style={{ marginBottom: "2px", fontSize: "1.5rem" }} /> Blogs & Projects
-              </Nav.Link>
-            </Nav.Item>
-
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/board"
-                onClick={() => updateExpanded(false)}
-                className="nav-link-custom"
-              >
-                <AiOutlineTeam style={{ marginBottom: "2px", fontSize: "1.5rem" }} /> Board
-              </Nav.Link>
-            </Nav.Item>
-
-            
-
-            <Nav.Item>
-              <Nav.Link
-                as={Link}
-                to="/contact"
-                onClick={() => updateExpanded(false)}
-                className="nav-link-custom"
-              >
-                <LuContact style={{ marginBottom: "2px", fontSize: "1.5rem" }} /> Contact us
-              </Nav.Link>
-            </Nav.Item>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+      {/* Bottom Navbar for Mobile */}
+      <motion.div
+        initial={{opacity: 1, y: 100}}
+        animate={{opacity: visible ? 1 : 0, y: visible ? 0 : 100}}
+        transition={{duration: 0.2}}
+        className="flex sm:hidden fixed bottom-4 inset-x-0 px-2 py-2 rounded-2xl max-w-[97%] mx-auto
+                    items-center justify-around space-x-2
+                    bg-gray-100/15 backdrop-blur-md border border-gray-100/30 shadow-md z-50">
+        {navItems.map((item, idx) => (
+          <a
+            key={item.link}
+            href={item.link}
+            onClick={handleClick}
+            aria-label={`Go to ${item.link}`}
+            className="flex flex-col items-center p-2 rounded-full text-gray-50">
+            {item.icon}
+          </a>
+        ))}
+      </motion.div>
+    </AnimatePresence>
   );
 }
 
-export default NavBar;
